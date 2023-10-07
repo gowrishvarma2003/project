@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "390438471098",
+    "project_id": "uropnew-d4e2b",
+    "storage_bucket": "uropnew-d4e2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390438471098:android:075ba58e8c176c3e050983",
+        "android_client_info": {
+          "package_name": "com.example.uropnew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs5Bh7sTQhu5tdklmqkMPPEoSRuL503nc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
