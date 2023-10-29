@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'server',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +50,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+ 
+
+CORS_ALLOW_ALL_ORIGINS = True  # Set this to False to only allow specific origins
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # Replace with the actual URL of your Flutter app
+# ]
+
 
 ROOT_URLCONF = 'uropserver.urls'
 
@@ -138,3 +147,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
 }
+
+# settings.py
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

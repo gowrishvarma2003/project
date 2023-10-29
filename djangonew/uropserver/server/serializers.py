@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import users,sellers
+from .models import users,sellers,products
+from django import forms
 
 class userserializer(serializers.ModelSerializer):
     class Meta:
@@ -27,3 +28,29 @@ class sellerserializer(serializers.ModelSerializer):
             'district',
             'state'
         ]
+
+# class productsserializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = products
+#         fields = [
+#             'name',
+#             'image_paths'
+#         ]
+
+# serializers.py
+from rest_framework import serializers
+# from .models import ImageModel
+
+class ImageModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = products
+        fields = ['id','image','product_name','quanteaty','price']
+
+
+from rest_framework import serializers
+from .models import products
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = products
+        fields = '__all__'

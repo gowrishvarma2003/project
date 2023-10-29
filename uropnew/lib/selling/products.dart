@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/widgets.dart';
+import 'dart:convert';
 
-class products extends StatefulWidget {
+class sell_products extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _productsstate();
 }
 
-String? product_name;
-String? quanteaty;
+String product_name = "";
+String quanteaty = "";
+String price = "";
 
 // Future<void> _captureImage() async {
 //   final picker = ImagePicker();
@@ -54,7 +58,7 @@ Widget slider() {
 
 Widget name() {
   return Container(
-    margin: EdgeInsets.only(top: 15,left:5,right: 5),
+    margin: EdgeInsets.only(top: 15, left: 5, right: 5),
     child: Container(
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: TextFormField(
@@ -86,43 +90,80 @@ Widget name() {
 }
 
 Widget quantety() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      child: Container(
-        // height: 100,
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: TextFormField(
-          onChanged: (number) {
-            quanteaty= number;
-          },
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            labelText: "quanteaty",
-            fillColor: Colors.black,
-            border: OutlineInputBorder(),
-            labelStyle: TextStyle(color: Colors.black),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 1.5,
-              ),
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 5),
+    child: Container(
+      // height: 100,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      child: TextFormField(
+        onChanged: (number) {
+          quanteaty = number;
+        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: "quanteaty",
+          fillColor: Colors.black,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.5,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 1.5,
-              ),
-            ),
-            // errorText: validate && (phonenumber?.isEmpty ?? true)
-            //     ? "This Field cannot be empty"
-            //     :null
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+          ),
+          // errorText: validate && (phonenumber?.isEmpty ?? true)
+          //     ? "This Field cannot be empty"
+          //     :null
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-class _productsstate extends State<products> {
+Widget price_container() {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 5),
+    child: Container(
+      // height: 100,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      child: TextFormField(
+        onChanged: (number) {
+          price = number;
+        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: "Price",
+          fillColor: Colors.black,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+          ),
+          // errorText: validate && (phonenumber?.isEmpty ?? true)
+          //     ? "This Field cannot be empty"
+          //     :null
+        ),
+      ),
+    ),
+  );
+}
+
+class _productsstate extends State<sell_products> {
   Future<void> _addImage() async {
     final picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -134,38 +175,119 @@ class _productsstate extends State<products> {
     }
   }
 
+  // Future<void> _uploadImages() async {
+  //   final uri = Uri.parse('http://10.1.184.70:8000/server/products/');
+  //   final request = http.MultipartRequest('POST', uri);
+
+  //   request.fields['name'] = 'apple';
+
+  //   for (var image in imageList) {
+  //     request.files
+  //         .add(await http.MultipartFile.fromPath('image_paths', image.path));
+  //   }
+
+  //   final response = await request.send();
+
+  //   if (response.statusCode == 201) {
+  //     print('Images uploaded successfully');
+  //   } else {
+  //     print('Failed to upload images. Status code: ${response.statusCode}');
+  //   }
+  // }
+
+// Future<void> uploadImages(List<File> imageList) async {
+//   // var uri = Uri.parse('http://10.1.184.70:8000/server/products/');
+
+//   // var request = http.MultipartRequest('POST', uri);
+
+//   var uri = Uri.parse('http://10.1.187.205:8000/server/products/');
+
+//   var request = http.MultipartRequest('POST', uri);
+//   // request.headers['X-CSRFToken'] = 'your-csrf-token'; // Replace with your CSRF token
+
+//   for (var image in imageList) {
+//     request.files.add(await http.MultipartFile.fromPath('images', image.path));
+//   }
+
+//   var response = await request.send();
+//   if (response.statusCode == 200) {
+//     print('Images uploaded successfully');
+//   } else {
+//     print('Failed to upload images');
+//   }
+// }
+
+// import 'package:http/http.dart' as http;
+
+  Future<String> fetchCSRFToken() async {
+    final response = await http.get(Uri.parse(
+        'http://10.1.173.125:8000/server/get-csrf-token/')); // Replace with your Django server URL
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final csrfToken = data['csrfToken'];
+      return csrfToken;
+    } else {
+      throw Exception('Failed to fetch CSRF token');
+    }
+  }
+
+  Future<void> uploadImages(List<File> images) async {
+    final csrfToken = await fetchCSRFToken();
+    print(csrfToken);
+
+    for (File imageFile in images) {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://10.1.173.125:8000/server/products/'),
+      );
+      request.headers['X-CSRFToken'] = csrfToken;
+      request.fields['product_name'] = product_name;
+      request.fields['quanteaty'] = quanteaty;
+      request.fields['price'] = price;
+
+      var file = await http.MultipartFile.fromPath('image', imageFile.path);
+      request.files.add(file);
+
+      var response = await request.send();
+      if (response.statusCode == 201) {
+        print('Image uploaded successfully');
+      } else {
+        print('Failed to upload image');
+        print(response);
+      }
+    }
+  }
+
+  Widget button() {
+    return Container(
+        margin: EdgeInsets.only(left: 5, right: 5, top: 20),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: TextButton(
+              style: TextButton.styleFrom(
+                  // padding: EdgeInsets.symmetric(horizontal: 200),
+                  backgroundColor: Colors.black),
+              onPressed: () {
+                uploadImages(imageList);
+                // if (agree) {
+                //   _register();
+                //   // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
+                // }
+              },
+              child: Text(
+                "Add product",
+                style: TextStyle(
+                  backgroundColor: Colors.black,
+                  color: Colors.white,
+                ),
+              )),
+        ));
+  }
+
   Widget build(BuildContext context) {
-
-    void _register(){
-      
-    }
-
-    Widget button() {
-      return Container(
-          margin: EdgeInsets.only(left: 5, right: 5, top: 20),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: TextButton(
-                style: TextButton.styleFrom(
-                    // padding: EdgeInsets.symmetric(horizontal: 200),
-                    backgroundColor: Colors.black),
-                onPressed: () {
-                  // if (agree) {
-                  //   _register();
-                  //   // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
-                  // }
-                },
-                child: Text(
-                  "Add product",
-                  style: TextStyle(
-                    backgroundColor: Colors.black,
-                    color: Colors.white,
-                  ),
-                )),
-          ));
-    }
     return Scaffold(
-              appBar: AppBar(
+        appBar: AppBar(
             // elevation: 0.5,
             backgroundColor: Colors.white,
             title: Container(
@@ -189,17 +311,23 @@ class _productsstate extends State<products> {
               ),
             )),
         body: Column(
-      children: [
-        slider(),
-        ElevatedButton(
-            onPressed: _addImage,
-            child: Text("add image",style: TextStyle(color: Colors.white),),
-            style: ButtonStyle(backgroundColor:  MaterialStateProperty.all<Color>(Colors.black)),
-          ),
-        name(),
-        quantety(),
-        button()
-      ],
-    ));
+          children: [
+            slider(),
+            ElevatedButton(
+              onPressed: _addImage,
+              child: Text(
+                "add image",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.black)),
+            ),
+            name(),
+            quantety(),
+            price_container(),
+            button()
+          ],
+        ));
   }
 }

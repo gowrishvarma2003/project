@@ -18,8 +18,12 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('server/',include('server.urls')),
-    # path('receive/',include('server.urls')),
-    path('sellers/',include('server.urls'))
+    path('receive/',include('server.urls')),
+    path('sellers/',include('server.urls')),
+    path('products/',include('server.urls')),
+    path('get-csrf-token/',include('server.urls')),
+    # path('get_data/',include('server.urls'))
+    path('send/',include('server.urls'))
 ]

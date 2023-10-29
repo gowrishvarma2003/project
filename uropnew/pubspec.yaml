@@ -41,7 +41,9 @@ dependencies:
   pinput: ^3.0.1
   image_picker: ^1.0.4
   carousel_slider: ^4.2.1
-
+  dio: ^5.3.3
+  cached_network_image: ^3.3.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

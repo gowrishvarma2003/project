@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:uropnew/auth/signup.dart';
 import 'package:uropnew/auth/verify.dart';
+import 'package:uropnew/home/home.dart';
 import 'package:uropnew/selling/products.dart';
 import 'package:uropnew/selling/seller.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: products(),
+      home: home(),
     );
   }
 }

@@ -1,11 +1,21 @@
 from django.shortcuts import render
 from .serializers import userserializer,sellerserializer
-from .models import users,sellers
+from .models import users,sellers,products
 from rest_framework.generics import ListAPIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import users
+from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from .serializers import ImageModelSerializer
 
 # class userlist(ListAPIView):
 #     queryset = users.objects.all()
@@ -51,3 +61,53 @@ class sellerview(APIView):
             new_Data.save()
             return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
         return Response(seller_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+from .models import products  # Replace with your model
+
+class save_product(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, format=None):
+        serializer = ImageModelSerializer(data=request.data)
+        product_name = request.data.get('product_name')
+        quantity = request.data.get('quanteaty')
+        price = request.data.get('price')
+
+        if serializer.is_valid():
+            serializer.validated_data['product_name'] = product_name
+            serializer.validated_data['quanteaty'] = quantity
+            serializer.validated_data['price'] = price
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    print(csrf_token)
+    return JsonResponse({'csrfToken': csrf_token})
+
+
+# from rest_framework import generics
+# from .models import products
+# from .serializers import ProductSerializer
+
+# class ProductList(generics.ListCreateAPIView):
+#     queryset = products.objects.all()
+#     serializer_class = ProductSerializer
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import products
+from .serializers import ImageModelSerializer
+
+class ProductList(APIView):
+    def get(self, request):
+        products_data = products.objects.all()
+        serializer = ImageModelSerializer(products_data, many=True)
+        return Response(serializer.data)
