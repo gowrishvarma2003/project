@@ -111,3 +111,31 @@ class ProductList(APIView):
         products_data = products.objects.all()
         serializer = ImageModelSerializer(products_data, many=True)
         return Response(serializer.data)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import carts
+from .serializers import cartserializer
+
+class cartlist(APIView):
+    def get(self, request):
+        cart_data = carts.objects.all()
+        serializer = cartserializer(cart_data, many=True)
+        return Response(serializer.data)
+
+class cartView(APIView):
+    def post(self, request, format=None):
+        cart_serializer = cartserializer(data=request.data)
+        if cart_serializer.is_valid():
+            cart_data = cart_serializer.validated_data
+            user_id_g = cart_data.get('user_id')
+            product_name_g = cart_data.get('product_name')
+            image_g = cart_data.get('image')
+            quantity_g = cart_data.get('quanteaty')
+            price_g = cart_data.get('price')
+            new_Data = carts(user_id = user_id_g,product_name=product_name_g,image=image_g,quantity=quantity_g,price=price_g)
+            new_Data.save()
+            return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
+        return Response(cart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
