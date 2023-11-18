@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../main.dart' as mainfile;
 
 class seller extends StatefulWidget {
   @override
@@ -246,7 +247,7 @@ class _sellerstate extends State<seller> {
       print(district_f);
       print(state_f);
 
-      final String apiUrl = 'http://10.1.178.164:8000/server/sellers/';
+      final String apiUrl = 'http://' + mainfile.ip + '/server/sellers/';
 
       // Your data to send
       final Map<String, dynamic> dataToSend = {
