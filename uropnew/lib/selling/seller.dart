@@ -246,7 +246,7 @@ class _sellerstate extends State<seller> {
       print(district_f);
       print(state_f);
 
-      final String apiUrl = 'http://10.1.77.66:8000/server/sellers/';
+      final String apiUrl = 'http://10.1.178.164:8000/server/sellers/';
 
       // Your data to send
       final Map<String, dynamic> dataToSend = {

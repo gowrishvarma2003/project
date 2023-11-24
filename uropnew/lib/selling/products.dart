@@ -221,7 +221,7 @@ class _productsstate extends State<sell_products> {
 
   Future<String> fetchCSRFToken() async {
     final response = await http.get(Uri.parse(
-        'http://10.1.173.125:8000/server/get-csrf-token/')); // Replace with your Django server URL
+        'http://10.1.178.164:8000/server/get-csrf-token/')); // Replace with your Django server URL
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -287,30 +287,31 @@ class _productsstate extends State<sell_products> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            // elevation: 0.5,
-            backgroundColor: Colors.white,
-            title: Container(
-              // padding: EdgeInsets.only(bottom: 20),
-              // margin: EdgeInsets.only(top: 10),
-              child: Text(
-                "Add product",
-                style: TextStyle(color: Colors.black),
-              ),
+      appBar: AppBar(
+          // elevation: 0.5,
+          backgroundColor: Colors.white,
+          title: Container(
+            // padding: EdgeInsets.only(bottom: 20),
+            // margin: EdgeInsets.only(top: 10),
+            child: Text(
+              "Add product",
+              style: TextStyle(color: Colors.black),
             ),
-            leading: Container(
-              // padding: EdgeInsets.only(bottom: 20),
-              // margin: EdgeInsets.only(top: 10),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back),
-                iconSize: 25.0,
-                color: Colors.black,
-                onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => Vachileowner()),);
-                },
-              ),
-            )),
-        body: Column(
+          ),
+          leading: Container(
+            // padding: EdgeInsets.only(bottom: 20),
+            // margin: EdgeInsets.only(top: 10),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back),
+              iconSize: 25.0,
+              color: Colors.black,
+              onPressed: () {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => Vachileowner()),);
+              },
+            ),
+          )),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             slider(),
             ElevatedButton(
@@ -320,14 +321,16 @@ class _productsstate extends State<sell_products> {
                 style: TextStyle(color: Colors.white),
               ),
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              ),
             ),
             name(),
             quantety(),
             price_container(),
-            button()
+            button(),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

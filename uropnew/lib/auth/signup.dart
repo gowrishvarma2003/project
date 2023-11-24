@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:uropnew/home/home.dart';
+
 class signup extends StatelessWidget {
   String? first_name_f;
   String? last_name_f;
@@ -276,7 +278,7 @@ class signup extends StatelessWidget {
       // print(district_f);
       // print(state_f);
 
-      final String apiUrl = 'http://10.1.181.180:8000/server/receive/';
+      final String apiUrl = 'http://10.1.178.164:8000/server/receive/';
 
       // Your data to send
       final Map<String, dynamic> dataToSend = {
@@ -301,6 +303,7 @@ class signup extends StatelessWidget {
 
       if (response.statusCode == 200) {
         print('Data sent successfully.');
+         Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));
       } else {
         print('Failed to send data. Status code: ${response.statusCode}');
       }
