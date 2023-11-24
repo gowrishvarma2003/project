@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uropnew/selling/products.dart';
+import '../main.dart' as mainfile;
 
 class all extends StatefulWidget {
   State<StatefulWidget> createState() => _homestate();
@@ -47,7 +48,7 @@ class _homestate extends State<all> {
 
   Future<List<Product>> fetchProductsFromServer() async {
     final response =
-        await http.get(Uri.parse('http://10.1.178.164:8000/server/send/'));
+        await http.get(Uri.parse('http://' + mainfile.ip +'/server/send/'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data
@@ -90,7 +91,7 @@ class _homestate extends State<all> {
                 width: 100.0,
                 height: 100.0,
                 child: Image.network(
-                  'http://10.1.173.125:8000/server${products[index].image}',
+                  'http://' + mainfile.ip + '/server${products[index].image}',
                   fit: BoxFit.cover,
                 ),
               ),

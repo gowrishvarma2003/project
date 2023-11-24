@@ -8,7 +8,10 @@ import 'package:uropnew/home/home.dart';
 import 'package:uropnew/selling/products.dart';
 import 'package:uropnew/selling/seller.dart';
 
-void main()async {
+// define a global variable that can be used in all the files
+String ip = '255.255.255.255:8000';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());

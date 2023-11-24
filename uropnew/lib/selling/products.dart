@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
+import '../main.dart' as mainfile;
 
 class sell_products extends StatefulWidget {
   @override
@@ -176,7 +177,7 @@ class _productsstate extends State<sell_products> {
   }
 
   // Future<void> _uploadImages() async {
-  //   final uri = Uri.parse('http://10.1.184.70:8000/server/products/');
+  //   final uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
   //   final request = http.MultipartRequest('POST', uri);
 
   //   request.fields['name'] = 'apple';
@@ -196,11 +197,11 @@ class _productsstate extends State<sell_products> {
   // }
 
 // Future<void> uploadImages(List<File> imageList) async {
-//   // var uri = Uri.parse('http://10.1.184.70:8000/server/products/');
+//   // var uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
 
 //   // var request = http.MultipartRequest('POST', uri);
 
-//   var uri = Uri.parse('http://10.1.187.205:8000/server/products/');
+//   var uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
 
 //   var request = http.MultipartRequest('POST', uri);
 //   // request.headers['X-CSRFToken'] = 'your-csrf-token'; // Replace with your CSRF token
@@ -221,7 +222,7 @@ class _productsstate extends State<sell_products> {
 
   Future<String> fetchCSRFToken() async {
     final response = await http.get(Uri.parse(
-        'http://10.1.178.164:8000/server/get-csrf-token/')); // Replace with your Django server URL
+        'http://' + mainfile.ip + '/server/get-csrf-token/')); // Replace with your Django server URL
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -239,7 +240,7 @@ class _productsstate extends State<sell_products> {
     for (File imageFile in images) {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://10.1.173.125:8000/server/products/'),
+        Uri.parse('http://' + mainfile.ip + '/server/products/'),
       );
       request.headers['X-CSRFToken'] = csrfToken;
       request.fields['product_name'] = product_name;
