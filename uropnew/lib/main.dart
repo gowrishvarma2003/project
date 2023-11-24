@@ -9,7 +9,7 @@ import 'package:uropnew/selling/products.dart';
 import 'package:uropnew/selling/seller.dart';
 
 // define a global variable that can be used in all the files
-String ip = '255.255.255.255:8000';
+String ip = '10.1.171.172:8000';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

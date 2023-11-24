@@ -230,7 +230,8 @@ class ProductDetailScreen extends StatelessWidget {
               width: 200.0,
               height: 200.0,
               child: Image.network(
-                'http://10.1.173.125:8000/server${product.image}',
+                'http://' + mainfile.ip + '/server${product.image}',
+                // 'http://' + mainfile.ip + ':8000/server${product.image}',
                 fit: BoxFit.cover,
               ),
             ),
