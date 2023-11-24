@@ -201,6 +201,7 @@ class ProductDetailScreen extends StatelessWidget {
                 onPressed: () {
                   // _register();
                   // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
+                  
                 },
                 child: Text(
                   "Add to cart",
