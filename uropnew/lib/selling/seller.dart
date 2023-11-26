@@ -29,6 +29,12 @@ class _sellerstate extends State<seller> {
           onChanged: (name) {
             sellername = name;
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your name';
+            }
+            return null;
+          },
           decoration: const InputDecoration(
             fillColor: Colors.black,
             border: OutlineInputBorder(),
@@ -63,6 +69,12 @@ class _sellerstate extends State<seller> {
             phonenumber_f = number;
           },
           keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your phone number';
+            }
+            return null;
+          },
           decoration: InputDecoration(
             labelText: "Phonenumber",
             fillColor: Colors.black,
@@ -102,6 +114,12 @@ class _sellerstate extends State<seller> {
                     pincode_f = code;
                   },
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your pincode';
+                    }
+                    return null;
+                  },
                   decoration: const InputDecoration(
                       fillColor: Colors.black,
                       border: OutlineInputBorder(),
@@ -126,6 +144,12 @@ class _sellerstate extends State<seller> {
                 child: TextFormField(
                   onChanged: (city_name) {
                     city_f = city_name;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your city';
+                    }
+                    return null;
                   },
                   decoration: const InputDecoration(
                     fillColor: Colors.black,
@@ -157,6 +181,12 @@ class _sellerstate extends State<seller> {
             onChanged: (district_name) {
               district_f = district_name;
             },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your district';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               fillColor: Colors.black,
               border: OutlineInputBorder(),
@@ -184,6 +214,12 @@ class _sellerstate extends State<seller> {
             onChanged: (street_name) {
               street_f = street_name;
             },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your street';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               fillColor: Colors.black,
               border: OutlineInputBorder(),
@@ -210,6 +246,12 @@ class _sellerstate extends State<seller> {
           child: TextFormField(
             onChanged: (state_name) {
               state_f = state_name;
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your state';
+              }
+              return null;
             },
             decoration: const InputDecoration(
               fillColor: Colors.black,

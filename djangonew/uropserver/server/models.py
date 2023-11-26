@@ -63,7 +63,9 @@ class products(models.Model):
 
 class orders(models.Model):
     user = models.BigIntegerField()
+    seller = models.BigIntegerField()
+    product_name = models.CharField(max_length=50)
     quantity = models.IntegerField()
     price = models.IntegerField()
-    product_name = models.CharField(max_length=50)
-    image = models.CharField(max_length=1000)
+    status = models.CharField(max_length=50)
+    date = models.DateField(auto_now_add=True)

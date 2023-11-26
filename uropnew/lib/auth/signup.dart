@@ -32,6 +32,12 @@ class signup extends StatelessWidget {
                 onChanged: (name) {
                   first_name_f = name;
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your first name';
+                  }
+                  return null;
+                },
                 decoration: const InputDecoration(
                     fillColor: Colors.black,
                     border: OutlineInputBorder(),
@@ -56,6 +62,12 @@ class signup extends StatelessWidget {
               child: TextFormField(
                 onChanged: (name) {
                   last_name_f = name;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your last name';
+                  }
+                  return null;
                 },
                 decoration: const InputDecoration(
                   fillColor: Colors.black,
@@ -94,6 +106,12 @@ class signup extends StatelessWidget {
             phonenumber_f = number;
           },
           keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your phone number';
+            }
+            return null;
+          },
           decoration: InputDecoration(
             labelText: "Phonenumber",
             fillColor: Colors.black,
@@ -132,6 +150,12 @@ class signup extends StatelessWidget {
                   onChanged: (code) {
                     pincode_f = code;
                   },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your pincode';
+                    }
+                    return null;
+                  },
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                       fillColor: Colors.black,
@@ -157,6 +181,12 @@ class signup extends StatelessWidget {
                 child: TextFormField(
                   onChanged: (city_name) {
                     city_f = city_name;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your city';
+                    }
+                    return null;
                   },
                   decoration: const InputDecoration(
                     fillColor: Colors.black,
@@ -188,6 +218,12 @@ class signup extends StatelessWidget {
             onChanged: (district_name) {
               district_f = district_name;
             },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your district';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               fillColor: Colors.black,
               border: OutlineInputBorder(),
@@ -215,6 +251,12 @@ class signup extends StatelessWidget {
             onChanged: (street_name) {
               street_f = street_name;
             },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your address, streetname, building no etc..';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               fillColor: Colors.black,
               border: OutlineInputBorder(),
@@ -241,6 +283,12 @@ class signup extends StatelessWidget {
           child: TextFormField(
             onChanged: (state_name) {
               state_f = state_name;
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your state';
+              }
+              return null;
             },
             decoration: const InputDecoration(
               fillColor: Colors.black,
