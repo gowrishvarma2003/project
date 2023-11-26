@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uropnew/selling/products.dart';
 import '../main.dart' as mainfile;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class all extends StatefulWidget {
   State<StatefulWidget> createState() => _homestate();
@@ -35,20 +36,9 @@ class _homestate extends State<all> {
     fetchProducts();
   }
 
-  Future<void> fetchProducts() async {
-    try {
-      List<Product> fetchedProducts = await fetchProductsFromServer();
-      setState(() {
-        products = fetchedProducts; // Update the products list
-      });
-    } catch (e) {
-      // Handle errors
-    }
-  }
-
   Future<List<Product>> fetchProductsFromServer() async {
     final response =
-        await http.get(Uri.parse('http://' + mainfile.ip +'/server/send/'));
+        await http.get(Uri.parse('http://' + mainfile.ip + '/server/send/'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data
@@ -65,6 +55,18 @@ class _homestate extends State<all> {
           .toList();
     } else {
       throw Exception('Failed to load products');
+    }
+  }
+
+  Future<void> fetchProducts() async {
+    try {
+      List<Product> fetchedProducts = await fetchProductsFromServer();
+      setState(() {
+        products = fetchedProducts; // Update the products list
+      });
+      // print(products[0].productName);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -142,22 +144,42 @@ class _homestate extends State<all> {
     );
   }
 }
+// class Product {
+//   final String image;
+//   final String productName;
+//   final double price;
 
-class ProductDetailScreen extends StatelessWidget {
+//   Product({required this.image, required this.productName, required this.price});
+// }
+
+class ProductDetailScreen extends StatefulWidget {
   final Product product;
 
   ProductDetailScreen({required this.product});
 
-  String quentity = "";
+  @override
+  _ProductDetailScreenState createState() => _ProductDetailScreenState();
+}
 
-  Widget squentity() {
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late String quantity;
+
+  @override
+  void initState() {
+    super.initState();
+    quantity = "";
+  }
+
+  Widget quantityInput() {
     return Container(
       child: Container(
-        // height: 100,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: TextFormField(
           onChanged: (number) {
-            quentity = number;
+            setState(() {
+              quantity = number;
+            });
           },
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
@@ -177,52 +199,81 @@ class ProductDetailScreen extends StatelessWidget {
                 width: 1.5,
               ),
             ),
-            // errorText: validate && (phonenumber?.isEmpty ?? true)
-            //     ? "This Field cannot be empty"
-            //     :null
           ),
         ),
       ),
     );
   }
 
+  Widget addToCartButton() {
+    return Container(
+      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.black,
+            ),
+            onPressed: () {
+              addToCart();
+            },
+            child: Text(
+              "Add to cart",
+              style: TextStyle(
+                backgroundColor: Colors.black,
+                color: Colors.white,
+              ),
+            )),
+      ),
+    );
+  }
+
+  void addToCart() async {
+    var user = FirebaseAuth.instance.currentUser!.phoneNumber;
+    if (user != null) {
+      user = user.replaceFirst("+91", ""); // Modify user data as needed
+      print(user);
+    } else {
+      print('User data not available.');
+      return; // Return if user data is not available
+    }
+
+    Map<String, dynamic> data = {
+      'image': widget.product.image,
+      'product_name': widget.product.productName,
+      'quantity': quantity,
+      'price': widget.product.price,
+      'user': user, // Include user information in the data payload
+    };
+
+    String body = json.encode(data);
+
+    var url = Uri.parse('http://' + mainfile.ip + '/server/cart/');
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      print('Added to cart successfully!');
+    } else {
+      print('Failed to add to cart. Error: ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget button() {
-      return Container(
-          margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: TextButton(
-                style: TextButton.styleFrom(
-                    // padding: EdgeInsets.symmetric(horizontal: 200),
-                    backgroundColor: Colors.black),
-                onPressed: () {
-                  // _register();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
-                  
-                },
-                child: Text(
-                  "Add to cart",
-                  style: TextStyle(
-                    backgroundColor: Colors.black,
-                    color: Colors.white,
-                  ),
-                )),
-          ));
-    }
-
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white, // Set the background color to white
-          title: Text(
-            'Product Details',
-            style: TextStyle(color: Colors.black), // Set text color to black
-          ),
-          // iconTheme:
-          //     IconThemeData(color: Colors.black), // Set icon color to black
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Product Details',
+          style: TextStyle(color: Colors.black),
         ),
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -231,8 +282,7 @@ class ProductDetailScreen extends StatelessWidget {
               width: 200.0,
               height: 200.0,
               child: Image.network(
-                'http://' + mainfile.ip + '/server${product.image}',
-                // 'http://' + mainfile.ip + ':8000/server${product.image}',
+                'http://' + mainfile.ip + '/server${widget.product.image}',
                 fit: BoxFit.cover,
               ),
             ),
@@ -240,7 +290,7 @@ class ProductDetailScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(left: 20, top: 20),
               child: Text(
-                product.productName,
+                widget.product.productName,
                 style: TextStyle(fontSize: 24.0),
               ),
             ),
@@ -248,14 +298,15 @@ class ProductDetailScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(left: 20, top: 10),
               child: Text(
-                'Price: \$${product.price.toStringAsFixed(2)}',
+                'Price: \$${widget.product.price.toStringAsFixed(2)}',
                 style: TextStyle(
-                    fontSize: 16.0,
-                    color: const Color.fromARGB(255, 89, 89, 89)),
+                  fontSize: 16.0,
+                  color: const Color.fromARGB(255, 89, 89, 89),
+                ),
               ),
             ),
-            squentity(),
-            button()
+            quantityInput(),
+            addToCartButton(),
           ],
         ),
       ),

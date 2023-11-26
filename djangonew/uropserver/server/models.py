@@ -24,7 +24,7 @@ class sellers(models.Model):
 
 
 class carts(models.Model):
-    user_id = models.ForeignKey(users, on_delete=models.CASCADE)
+    user = models.BigIntegerField()
     quantity = models.IntegerField()
     price = models.IntegerField()
     product_name = models.CharField(max_length=50)
@@ -56,7 +56,14 @@ class carts(models.Model):
 from django.db import models
 
 class products(models.Model):
-    image = models.ImageField(kupload_to='images/')
+    image = models.ImageField(upload_to='images/')
     product_name = models.CharField(max_length=50)
     quanteaty = models.IntegerField(null=True)
     price = models.IntegerField(null=True)
+
+class orders(models.Model):
+    user = models.BigIntegerField()
+    quantity = models.IntegerField()
+    price = models.IntegerField()
+    product_name = models.CharField(max_length=50)
+    image = models.CharField(max_length=1000)

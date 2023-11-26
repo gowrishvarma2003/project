@@ -12,6 +12,8 @@ urlpatterns = [
     path('get-csrf-token/', get_csrf_token, name='get-csrf-token'),
     # path('get_data/',get_data,name = 'get_data')
     path('send/', views.ProductList.as_view(), name='product-list'),
+    path('cart/', views.cartView.as_view(), name='cart'),
+    path('cart_data/<int:user_id>/', views.cart_data.as_view(), name='cart_data'),
 ]
 
 if settings.DEBUG:

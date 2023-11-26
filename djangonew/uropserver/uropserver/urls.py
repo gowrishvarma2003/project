@@ -25,5 +25,7 @@ urlpatterns = [
     path('products/',include('server.urls')),
     path('get-csrf-token/',include('server.urls')),
     # path('get_data/',include('server.urls'))
-    path('send/',include('server.urls'))
+    path('send/',include('server.urls')),
+    path('cart/',include('server.urls')),
+    path('cart_data/',include('server.urls')),
 ]
