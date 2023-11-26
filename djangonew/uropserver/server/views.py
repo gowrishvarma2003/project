@@ -145,3 +145,28 @@ class cart_data(APIView):
         serializer = cartserializer(user_products, many=True)
         print(serializer.data)
         return Response(serializer.data)
+
+class user_orders_data(APIView):
+    def get(self, request, user_id):
+        user_products = carts.objects.filter(user=user_id)  # Query products for a specific user
+        serializer = cartserializer(user_products, many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+class userOrderView(APIView):
+    def post(self, request, format=None):
+        print(request.data)
+        return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
+#         cart_data = cart_serializer.validated_data
+#         user_g = cart_data.get('user')
+#         product_name_g = cart_data.get('product_name')
+#         image_g = cart_data.get('image')
+#         quantity_g = cart_data.get('quantity')
+#         price_g = cart_data.get('price')
+#         new_Data = carts(user=user_g,image=image_g,product_name=product_name_g,quantity=quantity_g,price=price_g)
+#         new_Data.save()
+#         return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
+#         return Response(cart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+

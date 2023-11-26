@@ -66,5 +66,18 @@ class cartserializer(serializers.ModelSerializer):
             'image'
         ]   
 
+class orderserializer(serializers.ModelSerializer):
+    class Meta:
+        model = orders
+        fields = [
+            'user',
+            'seller',
+            'product_name',
+            'quantity',
+            'price',
+            'status',
+            'date'
+        ]
+
 
 

@@ -66,6 +66,12 @@ Widget name() {
         onChanged: (name) {
           product_name = name;
         },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter product name';
+          }
+          return null;
+        },
         decoration: const InputDecoration(
           fillColor: Colors.black,
           border: OutlineInputBorder(),
@@ -101,6 +107,12 @@ Widget quantety() {
           quanteaty = number;
         },
         keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter quantity';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           labelText: "quanteaty",
           fillColor: Colors.black,
@@ -138,6 +150,12 @@ Widget price_container() {
           price = number;
         },
         keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter price';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           labelText: "Price",
           fillColor: Colors.black,
@@ -317,6 +335,12 @@ class _productsstate extends State<sell_products> {
             slider(),
             ElevatedButton(
               onPressed: _addImage,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter product name';
+                }
+                return null;
+              },
               child: Text(
                 "add image",
                 style: TextStyle(color: Colors.white),
