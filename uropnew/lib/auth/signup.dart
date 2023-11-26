@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:uropnew/home/home.dart';
+import 'package:uropnew/main.dart' as mainfile;
 
 class signup extends StatelessWidget {
   String? first_name_f;
@@ -278,7 +279,7 @@ class signup extends StatelessWidget {
       // print(district_f);
       // print(state_f);
 
-      final String apiUrl = 'http://10.1.178.164:8000/server/receive/';
+      final String apiUrl = 'http://' + mainfile.ip + '/server/receive/';
 
       // Your data to send
       final Map<String, dynamic> dataToSend = {

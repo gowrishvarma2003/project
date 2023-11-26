@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import users,sellers,products
+from .models import users,sellers,products,carts
 from django import forms
 
 class userserializer(serializers.ModelSerializer):
@@ -54,3 +54,17 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = products
         fields = '__all__'
+
+class cartserializer(serializers.ModelSerializer):
+    class Meta:
+        model = carts
+        fields = [
+            'user',
+            'quantity',
+            'price',
+            'product_name',
+            'image'
+        ]   
+
+
+

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uropnew/home/all_products.dart';
 import 'package:uropnew/selling/products.dart';
+import 'package:uropnew/home/mycart.dart';
 
 class home extends StatefulWidget{
   @override
@@ -16,7 +17,7 @@ class _homeState extends State<home>{
   int _currentIndex = 0;
   final List<Widget> _pages = [
     all(),
-    AboutPage(),
+    mycart(),
     sell_products(), 
   ];
 
