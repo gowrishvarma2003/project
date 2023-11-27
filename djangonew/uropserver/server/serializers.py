@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import users,sellers,products,carts
+from .models import users,sellers,products,carts,orders
 from django import forms
 
 class userserializer(serializers.ModelSerializer):
@@ -13,7 +13,9 @@ class userserializer(serializers.ModelSerializer):
             'city',
             'street',
             'district',
-            'state'
+            'state',
+            'lon',
+            'lat'
         ]
 
 class sellerserializer(serializers.ModelSerializer):
@@ -26,7 +28,9 @@ class sellerserializer(serializers.ModelSerializer):
             'city',
             'street',
             'district',
-            'state'
+            'state',
+            'lon',
+            'lat'
         ]
 
 # class productsserializer(serializers.ModelSerializer):
@@ -71,12 +75,13 @@ class orderserializer(serializers.ModelSerializer):
         model = orders
         fields = [
             'user',
-            'seller',
-            'product_name',
+            # 'seller',
+            'productName',
             'quantity',
             'price',
-            'status',
-            'date'
+            'image'
+            # 'status',
+            # 'date'
         ]
 
 

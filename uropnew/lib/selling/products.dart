@@ -335,12 +335,6 @@ class _productsstate extends State<sell_products> {
             slider(),
             ElevatedButton(
               onPressed: _addImage,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter product name';
-                }
-                return null;
-              },
               child: Text(
                 "add image",
                 style: TextStyle(color: Colors.white),

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,11 +8,69 @@ import 'package:flutter/services.dart';
 // import 'package:goeasy/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:uropnew/home/home.dart';
 import 'package:uropnew/main.dart' as mainfile;
 
-class signup extends StatelessWidget {
+class Signup extends StatefulWidget {
+
+  @override
+  _signupState createState() => _signupState();
+}
+
+class _signupState extends State<Signup> {
+
+    late Position _currentPosition;
+    String? latitude;
+    String? longitude;
+
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, show a dialog or request the user to enable them
+      return;
+    }
+
+    await _requestPermission();
+  }
+
+  Future<void> _requestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permission denied, recursively request permission again
+        await _requestPermission();
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately
+      return;
+    }
+
+    // Permission granted or changed, get the current position
+    _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      // Update UI with the current position's latitude and longitude
+      latitude = _currentPosition.latitude.toString();
+      longitude = _currentPosition.longitude.toString();
+      print(latitude);
+      print(longitude);
+      // Update UI here
+    });
+  }
+
+  
   String? first_name_f;
   String? last_name_f;
   String? phonenumber_f;
@@ -339,6 +399,8 @@ class signup extends StatelessWidget {
         'street': street_f,
         'district': district_f,
         'state': state_f,
+        'lon': longitude,
+        'lat': latitude,
         // Add your actual data here
       };
 

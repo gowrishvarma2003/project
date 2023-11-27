@@ -14,6 +14,7 @@ urlpatterns = [
     path('send/', views.ProductList.as_view(), name='product-list'),
     path('cart/', views.cartView.as_view(), name='cart'),
     path('cart_data/<int:user_id>/', views.cart_data.as_view(), name='cart_data'),
+    path('order/', views.userOrderView.as_view(), name='order'),
 ]
 
 if settings.DEBUG:

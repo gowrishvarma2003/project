@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart' as mainfile;
+import 'package:geolocator/geolocator.dart';
 
 class seller extends StatefulWidget {
   @override
@@ -10,6 +11,60 @@ class seller extends StatefulWidget {
 }
 
 class _sellerstate extends State<seller> {
+
+
+  
+    late Position _currentPosition;
+    String? latitude;
+    String? longitude;
+
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, show a dialog or request the user to enable them
+      return;
+    }
+
+    await _requestPermission();
+  }
+
+  Future<void> _requestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permission denied, recursively request permission again
+        await _requestPermission();
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately
+      return;
+    }
+
+    // Permission granted or changed, get the current position
+    _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      // Update UI with the current position's latitude and longitude
+      latitude = _currentPosition.latitude.toString();
+      longitude = _currentPosition.longitude.toString();
+      print(latitude);
+      print(longitude);
+      // Update UI here
+    });
+  }
+
+
   String? sellername;
   String? phonenumber_f;
   String? pincode_f;
@@ -300,6 +355,8 @@ class _sellerstate extends State<seller> {
         'street': street_f,
         'district': district_f,
         'state': state_f,
+        'lon': longitude,
+        'lat': latitude,
         // Add your actual data here
       };
 

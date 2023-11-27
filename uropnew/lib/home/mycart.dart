@@ -18,7 +18,7 @@ class Product {
   final String productName;
   final String image;
 
-    Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'user': user,
       'quantity': quantity,
@@ -36,39 +36,38 @@ class Product {
       required this.image});
 }
 
-
-
 class _mycartState extends State<mycart> {
   List<Product> products = [];
 
-Future<void> sendorders(List<Product> products, Map<String, dynamic> userDetails) async {
-  try {
-    // Convert the list of products to a list of JSON objects
-    List<Map<String, dynamic>> productsJson = products.map((product) => product.toJson()).toList();
+  Future<void> sendorders(
+      List<Product> products, Map<String, dynamic> userDetails) async {
+    try {
+      // Convert the list of products to a list of JSON objects
+      List<Map<String, dynamic>> productsJson =
+          products.map((product) => product.toJson()).toList();
 
-    // Add user-specific details to the payload
-    Map<String, dynamic> payload = {
-      'userDetails': userDetails,
-      'products': productsJson,
-    };
+      // Add user-specific details to the payload
+      Map<String, dynamic> payload = {
+        'userDetails': userDetails,
+        'products': productsJson,
+      };
 
-    // Send the combined payload to the server
-    final response = await http.post(
-      Uri.parse('http://' + mainfile.ip + '/server/send_products'),
-      body: jsonEncode(payload),
-      headers: {'Content-Type': 'application/json'},
-    );
+      // Send the combined payload to the server
+      final response = await http.post(
+        Uri.parse('http://' + mainfile.ip + '/server/order/'),
+        body: jsonEncode(payload),
+        headers: {'Content-Type': 'application/json'},
+      );
 
-    if (response.statusCode == 200) {
-      print('Products sent successfully');
-    } else {
-      throw Exception('Failed to send products');
+      if (response.statusCode == 200) {
+        print('Products sent successfully');
+      } else {
+        throw Exception('Failed to send products');
+      }
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
   }
-}
-
 
   Future<void> order() async {
     try {
@@ -89,20 +88,17 @@ Future<void> sendorders(List<Product> products, Map<String, dynamic> userDetails
         return; // Return if user data is not available
       }
 
-
       Map<String, dynamic> userDetails = {
         'user': user,
-    };
+      };
 
       // Send the fetched products back to the server
       await sendorders(products, userDetails);
     } catch (e) {
+      print("error");
       print(e);
     }
   }
-
-
-
 
   Future<List<Product>> fetchProductsFromServer() async {
     var user = FirebaseAuth.instance.currentUser!.phoneNumber;

@@ -11,7 +11,8 @@ class users(models.Model):
     street = models.CharField(max_length=100)
     district = models.CharField(max_length=100, default="")
     state = models.CharField(max_length=100)
-    
+    lon = models.CharField(max_length=100)
+    lat = models.CharField(max_length=100)
 
 class sellers(models.Model):
     seller_name = models.CharField(max_length=20)
@@ -21,6 +22,8 @@ class sellers(models.Model):
     street = models.CharField(max_length=100)
     district = models.CharField(max_length=100, default="")
     state = models.CharField(max_length=100)
+    lon = models.CharField(max_length=100)
+    lat = models.CharField(max_length=100)
 
 
 class carts(models.Model):
@@ -64,8 +67,10 @@ class products(models.Model):
 class orders(models.Model):
     user = models.BigIntegerField()
     seller = models.BigIntegerField()
-    product_name = models.CharField(max_length=50)
+    productName = models.CharField(max_length=50)
     quantity = models.IntegerField()
     price = models.IntegerField()
-    status = models.CharField(max_length=50)
-    date = models.DateField(auto_now_add=True)
+    # status = models.CharField(max_length=50)
+    # date_order = models.DateField(null=True)
+    # date_delivered = models.DateField(null=True)
+    image = models.ImageField(upload_to='images/')

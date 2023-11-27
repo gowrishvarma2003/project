@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .serializers import userserializer,sellerserializer,cartserializer
-from .models import users,sellers,products,carts
+from .models import users,sellers,products,carts,orders
 from rest_framework.generics import ListAPIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -23,11 +23,13 @@ from .serializers import ImageModelSerializer
 
 class usersView(APIView):
     def post(self, request, format=None):
+        print("hear")
+        print(request.data)
         serializer = userserializer(data=request.data)
         if serializer.is_valid():
             # Process the data here
             data = serializer.validated_data
-            print(data)
+            print("cfgv")
             # name_got = data.get('first_name')
             # print(name_got)
             first_name_g = data.get('first_name')
@@ -38,7 +40,9 @@ class usersView(APIView):
             street_g = data.get('street')
             district_g = data.get('district')
             state_g = data.get('state')
-            new_Data = users(first_name=first_name_g,last_name=last_name_g,phone= phone_g,pincode=pincode_g,city=city_g,street=street_g,district=district_g,state=state_g)
+            lon_g = data.get('lon')
+            lat_g = data.get('lat')
+            new_Data = users(first_name=first_name_g,last_name=last_name_g,phone= phone_g,pincode=pincode_g,city=city_g,street=street_g,district=district_g,state=state_g,lon=lon_g,lat=lat_g)
             # phone_got = data.get('phone')
             # new_Data = users(name=name_got,phone=phone_got)
             new_Data.save()
@@ -57,7 +61,9 @@ class sellerview(APIView):
             street_g = sellers_data.get('street')
             district_g = sellers_data.get('district')
             state_g = sellers_data.get('state')
-            new_Data = sellers(seller_name = sellername_g,phone= phone_g,pincode=pincode_g,city=city_g,street=street_g,district=district_g,state=state_g)
+            lon_g = sellers_data.get('lon')
+            lat_g = sellers_data.get('lat')
+            new_Data = sellers(seller_name = sellername_g,phone= phone_g,pincode=pincode_g,city=city_g,street=street_g,district=district_g,state=state_g,lon=lon_g,lat=lat_g)
             new_Data.save()
             return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
         return Response(seller_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -143,7 +149,7 @@ class cart_data(APIView):
     def get(self, request, user_id):
         user_products = carts.objects.filter(user=user_id)  # Query products for a specific user
         serializer = cartserializer(user_products, many=True)
-        print(serializer.data)
+        # print(serializer.data)
         return Response(serializer.data)
 
 class user_orders_data(APIView):
@@ -156,7 +162,31 @@ class user_orders_data(APIView):
 class userOrderView(APIView):
     def post(self, request, format=None):
         print(request.data)
-        return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
+        data = request.data
+
+        user_details = data.get('userDetails', {})
+        products = data.get('products', [])
+
+        # Save user details (assuming you have a separate model for user details)
+        # Replace UserDetailModel with your actual user detail model
+        # Assuming user phone number is being stored
+        user_phone_number = user_details.get('user')
+        # ...
+
+        # Save products to the database
+        for product_data in products:
+            product = orders(
+                user=user_phone_number,
+                quantity=product_data.get('quantity'),
+                price=product_data.get('price'),
+                productName=product_data.get('productName'),
+                image=product_data.get('image')
+                
+            )
+            product.save()
+
+        return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
+        # return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
 #         cart_data = cart_serializer.validated_data
 #         user_g = cart_data.get('user')
 #         product_name_g = cart_data.get('product_name')

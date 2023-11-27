@@ -104,7 +104,7 @@ class _OTPState extends State<otp> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => signup(),
+                          builder: (context) => Signup(),
                         ),
                       );
                     } catch (e) {

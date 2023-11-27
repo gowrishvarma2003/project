@@ -28,4 +28,5 @@ urlpatterns = [
     path('send/',include('server.urls')),
     path('cart/',include('server.urls')),
     path('cart_data/',include('server.urls')),
+    path('order/',include('server.urls')),
 ]
