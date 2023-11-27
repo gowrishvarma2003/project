@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import userserializer,sellerserializer,cartserializer
+from .serializers import userserializer,sellerserializer,cartserializer,orderserializer
 from .models import users,sellers,products,carts,orders
 from rest_framework.generics import ListAPIView
 from rest_framework import status
@@ -72,7 +72,8 @@ class sellerview(APIView):
 
 
 
-from .models import products  # Replace with your model
+from .models import products 
+from .models import sellers# Replace with your model
 
 class save_product(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -112,13 +113,33 @@ def get_csrf_token(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import products
-from .serializers import ImageModelSerializer
+from .serializers import ImageModelSerializer, ProductSerializer
+
+# class ProductList(APIView):
+#     def get(self, request):
+#         products_data = products.objects.all()
+#         serializer = ImageModelSerializer(products_data, many=True)
+#         return Response(serializer.data)
 
 class ProductList(APIView):
     def get(self, request):
-        products_data = products.objects.all()
-        serializer = ImageModelSerializer(products_data, many=True)
+        # Get unique combinations of product_name and price
+        unique_product_combinations = products.objects.values('product_name', 'price').distinct()
+        
+        # Initialize an empty list to store rows with unique combinations
+        unique_products_data = []
+
+        # Fetch rows corresponding to unique combinations
+        for combination in unique_product_combinations:
+            # Get the entire row data for unique combinations
+            row_data = products.objects.filter(product_name=combination['product_name'], price=combination['price']).first()
+            if row_data:
+                unique_products_data.append(row_data)
+
+        # Serialize the list of rows with unique combinations
+        serializer = ProductSerializer(unique_products_data, many=True)
         return Response(serializer.data)
+    
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -167,16 +188,22 @@ class userOrderView(APIView):
     def calculate_distance(self, lat1, lon1, lat2, lon2):
         return geodesic((lat1, lon1), (lat2, lon2)).kilometers
 
-    def get_nearest_seller(self, user_lat, user_lon, product_name):
-        seller_phones = products.objects.filter(product_name=product_name).values_list('seller', flat=True)
-        sellers = sellers.objects.filter(phone__in=seller_phones)
+    def get_nearest_seller(self, user_lat, user_lon, product):
+        seller_phones = products.objects.filter(product_name=str(product).strip()).values_list('seller', flat=True)
+        sellersf = []
+        for seller_phone in seller_phones:
+            seller = sellers.objects.get(phone=seller_phone)
+            sellersf.append(seller)
+        print(sellersf[0].lat, sellersf[0].lon)
         min_distance = float('inf')
         nearest_seller = None
-        for seller in sellers:
+        print("Yes")
+        for seller in sellersf:
             distance = self.calculate_distance(user_lat, user_lon, seller.lat, seller.lon)
             if distance < min_distance:
                 min_distance = distance
                 nearest_seller = seller
+            print("No")
         return nearest_seller
 
     def post(self, request, format=None):
@@ -194,14 +221,10 @@ class userOrderView(APIView):
             # select the seller who has the product and is nearest to the user
             product = orders(
                 user=user_phone_number,
-                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName')).get('phone'),
+                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName')).phone,
                 quantity=product_data.get('quantity'),
                 price=product_data.get('price'),
                 productName=product_data.get('productName'),
-                
-                
-                
-                
                 image=product_data.get('image')
             )
             product.save()
@@ -221,3 +244,11 @@ class userOrderView(APIView):
 
 
 
+class OrdersBySeller(APIView):
+    def get(self, request, seller_id):
+        # Retrieve orders for a specific seller
+        seller_orders = orders.objects.filter(seller=seller_id)
+        
+        # Serialize the orders
+        serializer = orderserializer(seller_orders, many=True)
+        return Response(serializer.data)

@@ -15,7 +15,9 @@ urlpatterns = [
     path('cart/', views.cartView.as_view(), name='cart'),
     path('cart_data/<int:user_id>/', views.cart_data.as_view(), name='cart_data'),
     path('order/', views.userOrderView.as_view(), name='order'),
+    path('seller_orders/<int:seller_id>/', views.OrdersBySeller.as_view(), name='seller_orders'),
+
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    

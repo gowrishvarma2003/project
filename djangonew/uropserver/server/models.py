@@ -75,3 +75,5 @@ class orders(models.Model):
     # date_order = models.DateField(null=True)
     # date_delivered = models.DateField(null=True)
     image = models.ImageField(upload_to='images/')
+
+
