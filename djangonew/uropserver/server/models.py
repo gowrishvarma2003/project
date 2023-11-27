@@ -63,6 +63,7 @@ class products(models.Model):
     product_name = models.CharField(max_length=50)
     quanteaty = models.IntegerField(null=True)
     price = models.IntegerField(null=True)
+    seller = models.BigIntegerField(null=True)
 
 class orders(models.Model):
     user = models.BigIntegerField()

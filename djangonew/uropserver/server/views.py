@@ -82,11 +82,13 @@ class save_product(APIView):
         product_name = request.data.get('product_name')
         quantity = request.data.get('quanteaty')
         price = request.data.get('price')
+        seller = request.data.get('seller')
 
         if serializer.is_valid():
             serializer.validated_data['product_name'] = product_name
             serializer.validated_data['quanteaty'] = quantity
             serializer.validated_data['price'] = price
+            serializer.validated_data['seller'] = seller
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -166,10 +168,7 @@ class userOrderView(APIView):
 
         user_details = data.get('userDetails', {})
         products = data.get('products', [])
-
-        # Save user details (assuming you have a separate model for user details)
-        # Replace UserDetailModel with your actual user detail model
-        # Assuming user phone number is being stored
+        
         user_phone_number = user_details.get('user')
         # ...
 
@@ -180,6 +179,10 @@ class userOrderView(APIView):
                 quantity=product_data.get('quantity'),
                 price=product_data.get('price'),
                 productName=product_data.get('productName'),
+                
+                
+                
+                
                 image=product_data.get('image')
                 
             )

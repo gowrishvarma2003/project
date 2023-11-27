@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import '../main.dart' as mainfile;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class sell_products extends StatefulWidget {
   @override
@@ -252,6 +253,16 @@ class _productsstate extends State<sell_products> {
   }
 
   Future<void> uploadImages(List<File> images) async {
+
+      var user = FirebaseAuth.instance.currentUser!.phoneNumber;
+      if (user != null) {
+        user = user.replaceFirst("+91", ""); // Modify user data as needed
+        print(user);
+      } else {
+        print('User data not available.');
+        return; // Return if user data is not available
+      }
+
     final csrfToken = await fetchCSRFToken();
     print(csrfToken);
 
@@ -264,6 +275,8 @@ class _productsstate extends State<sell_products> {
       request.fields['product_name'] = product_name;
       request.fields['quanteaty'] = quanteaty;
       request.fields['price'] = price;
+      request.fields['seller'] = user;
+      
 
       var file = await http.MultipartFile.fromPath('image', imageFile.path);
       request.files.add(file);

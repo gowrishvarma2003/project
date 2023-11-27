@@ -75,7 +75,7 @@ class orderserializer(serializers.ModelSerializer):
         model = orders
         fields = [
             'user',
-            # 'seller',
+            'seller',
             'productName',
             'quantity',
             'price',
