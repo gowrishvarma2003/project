@@ -208,6 +208,7 @@ class userOrderView(APIView):
                 cart_product.delete()
                # yes
 
+
         return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
         # return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
 #         cart_data = cart_serializer.validated_data
