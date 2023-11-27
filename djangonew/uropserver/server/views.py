@@ -165,8 +165,8 @@ class userOrderView(APIView):
     def calculate_distance(self, lat1, lon1, lat2, lon2):
         return geodesic((lat1, lon1), (lat2, lon2)).kilometers
 
-    def get_nearest_seller(self, user_lat, user_lon, product_name):
-        seller_phones = products.objects.filter(product_name=product_name).values_list('seller', flat=True)
+    def get_nearest_seller(self, user_lat, user_lon, product_name, price):
+        seller_phones = products.objects.filter(product_name=product_name, price=price).values_list('seller', flat=True)
         sellers = sellers.objects.filter(phone__in=seller_phones)
         min_distance = float('inf')
         nearest_seller = None
@@ -195,13 +195,17 @@ class userOrderView(APIView):
             # select the seller who has the product and is nearest to the user
             product = orders(
                 user=user_phone_number,
-                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName')).get('phone'),
+                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName'), product_data.get('price').get('phone'),
                 quantity=product_data.get('quantity'),
                 price=product_data.get('price'),
                 productName=product_data.get('productName'),
                 image=product_data.get('image')
             )
             product.save()
+            # remove a product from the cart
+            cart_product = carts.objects.filter(user=user_phone_number, product_name=product_data.get('productName'), price=product_data.get('price')).first()
+            if cart_product:
+                cart_product.delete()
 
         return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
         # return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
