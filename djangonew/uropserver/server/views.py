@@ -206,6 +206,7 @@ class userOrderView(APIView):
             cart_product = carts.objects.filter(user=user_phone_number, product_name=product_data.get('productName'), price=product_data.get('price')).first()
             if cart_product:
                 cart_product.delete()
+               # yes
 
         return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
         # return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
