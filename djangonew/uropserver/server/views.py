@@ -159,7 +159,24 @@ class user_orders_data(APIView):
         print(serializer.data)
         return Response(serializer.data)
 
+from geopy.distance import geodesic
+
 class userOrderView(APIView):
+    def calculate_distance(self, lat1, lon1, lat2, lon2):
+        return geodesic((lat1, lon1), (lat2, lon2)).kilometers
+
+    def get_nearest_seller(self, user_lat, user_lon, product_name):
+        seller_phones = products.objects.filter(product_name=product_name).values_list('seller', flat=True)
+        sellers = sellers.objects.filter(phone__in=seller_phones)
+        min_distance = float('inf')
+        nearest_seller = None
+        for seller in sellers:
+            distance = self.calculate_distance(user_lat, user_lon, seller.lat, seller.lon)
+            if distance < min_distance:
+                min_distance = distance
+                nearest_seller = seller
+        return nearest_seller
+
     def post(self, request, format=None):
         print(request.data)
         data = request.data
@@ -175,13 +192,14 @@ class userOrderView(APIView):
 
         # Save products to the database
         for product_data in products:
+            # select the seller who has the product and is nearest to the user
             product = orders(
                 user=user_phone_number,
+                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName')).get('phone'),
                 quantity=product_data.get('quantity'),
                 price=product_data.get('price'),
                 productName=product_data.get('productName'),
                 image=product_data.get('image')
-                
             )
             product.save()
 
