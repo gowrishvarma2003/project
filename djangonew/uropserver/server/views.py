@@ -48,7 +48,7 @@ class usersView(APIView):
             new_Data.save()
             return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class sellerview(APIView):
     def post(self, request, format=None):
         seller_serializer = sellerserializer(data=request.data)
@@ -90,7 +90,7 @@ class save_product(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -206,7 +206,6 @@ class userOrderView(APIView):
             cart_product = carts.objects.filter(user=user_phone_number, product_name=product_data.get('productName'), price=product_data.get('price')).first()
             if cart_product:
                 cart_product.delete()
-               # yes
 
 
         return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
