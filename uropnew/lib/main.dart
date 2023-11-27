@@ -7,7 +7,7 @@ import 'package:uropnew/home/all_products.dart';
 import 'package:uropnew/home/home.dart';
 import 'package:uropnew/selling/products.dart';
 import 'package:uropnew/selling/seller.dart';
-
+import 'package:uropnew/selling/seller_orders.dart';
 // define a global variable that can be used in all the files
 String ip = '10.1.171.172:8000';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: seller(),
+      home: home(),
     );
   }
 }

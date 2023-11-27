@@ -63,6 +63,7 @@ class products(models.Model):
     product_name = models.CharField(max_length=50)
     quanteaty = models.IntegerField(null=True)
     price = models.IntegerField(null=True)
+    seller = models.BigIntegerField(null=True)
 
 class orders(models.Model):
     user = models.BigIntegerField()
@@ -74,3 +75,5 @@ class orders(models.Model):
     # date_order = models.DateField(null=True)
     # date_delivered = models.DateField(null=True)
     image = models.ImageField(upload_to='images/')
+
+

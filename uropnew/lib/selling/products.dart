@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import '../main.dart' as mainfile;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class sell_products extends StatefulWidget {
   @override
@@ -194,50 +195,6 @@ class _productsstate extends State<sell_products> {
     }
   }
 
-  // Future<void> _uploadImages() async {
-  //   final uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
-  //   final request = http.MultipartRequest('POST', uri);
-
-  //   request.fields['name'] = 'apple';
-
-  //   for (var image in imageList) {
-  //     request.files
-  //         .add(await http.MultipartFile.fromPath('image_paths', image.path));
-  //   }
-
-  //   final response = await request.send();
-
-  //   if (response.statusCode == 201) {
-  //     print('Images uploaded successfully');
-  //   } else {
-  //     print('Failed to upload images. Status code: ${response.statusCode}');
-  //   }
-  // }
-
-// Future<void> uploadImages(List<File> imageList) async {
-//   // var uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
-
-//   // var request = http.MultipartRequest('POST', uri);
-
-//   var uri = Uri.parse('http://' + mainfile.ip + '/server/products/');
-
-//   var request = http.MultipartRequest('POST', uri);
-//   // request.headers['X-CSRFToken'] = 'your-csrf-token'; // Replace with your CSRF token
-
-//   for (var image in imageList) {
-//     request.files.add(await http.MultipartFile.fromPath('images', image.path));
-//   }
-
-//   var response = await request.send();
-//   if (response.statusCode == 200) {
-//     print('Images uploaded successfully');
-//   } else {
-//     print('Failed to upload images');
-//   }
-// }
-
-// import 'package:http/http.dart' as http;
-
   Future<String> fetchCSRFToken() async {
     final response = await http.get(Uri.parse(
         'http://' + mainfile.ip + '/server/get-csrf-token/')); // Replace with your Django server URL
@@ -252,6 +209,16 @@ class _productsstate extends State<sell_products> {
   }
 
   Future<void> uploadImages(List<File> images) async {
+
+      var user = FirebaseAuth.instance.currentUser!.phoneNumber;
+      if (user != null) {
+        user = user.replaceFirst("+91", ""); // Modify user data as needed
+        print(user);
+      } else {
+        print('User data not available.');
+        return; // Return if user data is not available
+      }
+
     final csrfToken = await fetchCSRFToken();
     print(csrfToken);
 
@@ -264,7 +231,8 @@ class _productsstate extends State<sell_products> {
       request.fields['product_name'] = product_name;
       request.fields['quanteaty'] = quanteaty;
       request.fields['price'] = price;
-
+      request.fields['seller'] = user;
+      
       var file = await http.MultipartFile.fromPath('image', imageFile.path);
       request.files.add(file);
 
@@ -278,6 +246,15 @@ class _productsstate extends State<sell_products> {
     }
   }
 
+   void _clearInputs() {
+    setState(() {
+      product_name = "";
+      quanteaty = "";
+      price = "";
+      imageList.clear(); // Clear the image list as well if needed
+    });
+  }
+
   Widget button() {
     return Container(
         margin: EdgeInsets.only(left: 5, right: 5, top: 20),
@@ -287,12 +264,17 @@ class _productsstate extends State<sell_products> {
               style: TextButton.styleFrom(
                   // padding: EdgeInsets.symmetric(horizontal: 200),
                   backgroundColor: Colors.black),
-              onPressed: () {
-                uploadImages(imageList);
-                // if (agree) {
-                //   _register();
-                //   // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
-                // }
+              onPressed: ()async {
+                await uploadImages(imageList);
+                // // if (agree) {
+                // //   _register();
+                // //   // Navigator.push(context, MaterialPageRoute(builder: (context)=>getbike()));
+                // // }
+                _clearInputs();
+                  Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) => sell_products()),
+                );
               },
               child: Text(
                 "Add product",
