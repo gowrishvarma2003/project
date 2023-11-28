@@ -55,9 +55,12 @@ from rest_framework import serializers
 from .models import products
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)  # Assuming 'image' is the field storing the image path in the 'products' model
     class Meta:
         model = products
-        fields = '__all__'
+        fields = [
+            'id','image','product_name','quanteaty','price','seller'
+        ]
 
 class cartserializer(serializers.ModelSerializer):
     class Meta:
@@ -79,8 +82,8 @@ class orderserializer(serializers.ModelSerializer):
             'productName',
             'quantity',
             'price',
-            'image'
-            # 'status',
+            'image',
+            'status',
             # 'date'
         ]
 

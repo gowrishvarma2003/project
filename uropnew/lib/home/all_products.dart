@@ -43,6 +43,7 @@ class _homestate extends State<all> {
       final List<dynamic> data = json.decode(response.body);
       return data
           .map((item) {
+            print(item['image']);
             return Product(
                 id: item['id'],
                 image: item['image'],

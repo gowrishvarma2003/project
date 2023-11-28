@@ -17,6 +17,7 @@ class Product {
   final int price;
   final String productName;
   final String image;
+  final String status="Ordered";
 
   Map<String, dynamic> toJson() {
     return {
@@ -25,6 +26,7 @@ class Product {
       'price': price,
       'productName': productName,
       'image': image,
+      'status': 'Ordered'
     };
   }
 
@@ -33,7 +35,8 @@ class Product {
       required this.quantity,
       required this.price,
       required this.productName,
-      required this.image});
+      required this.image,
+});
 }
 
 class _mycartState extends State<mycart> {
@@ -154,13 +157,13 @@ class _mycartState extends State<mycart> {
     Widget button() {
       return Container(
           child: TextButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => sell_products()),
-          // );
-          order();
+        onPressed: () async{
           
+          order();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => mycart()),
+          );
         },
         child: Text('Add products'),
       ));

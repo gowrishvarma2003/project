@@ -71,7 +71,7 @@ class orders(models.Model):
     productName = models.CharField(max_length=50)
     quantity = models.IntegerField()
     price = models.IntegerField()
-    # status = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
     # date_order = models.DateField(null=True)
     # date_delivered = models.DateField(null=True)
     image = models.ImageField(upload_to='images/')

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import userserializer,sellerserializer,cartserializer
+from .serializers import userserializer,sellerserializer,cartserializer,orderserializer,ProductSerializer
 from .models import users,sellers,products,carts,orders
 from rest_framework.generics import ListAPIView
 from rest_framework import status
@@ -114,8 +114,23 @@ from .serializers import ImageModelSerializer
 
 class ProductList(APIView):
     def get(self, request):
-        products_data = products.objects.all()
-        serializer = ImageModelSerializer(products_data, many=True)
+        # Get unique combinations of product_name and price
+        unique_product_combinations = products.objects.values('product_name', 'price').distinct()
+        # print(unique_product_combinations)
+        # Initialize an empty list to store rows with unique combinations
+        unique_products_data = []
+
+        # Fetch rows corresponding to unique combinations
+        for combination in unique_product_combinations:
+            # Get the entire row data for unique combinations
+            row_data = products.objects.filter(product_name=combination['product_name'], price=combination['price']).first()
+            if row_data:
+                unique_products_data.append(row_data)
+        print(unique_products_data[0].image)
+        # print(unique_products_data[0].image)
+        # Serialize the list of rows with unique combinations
+        serializer = ProductSerializer(unique_products_data, many=True)
+        # print(serializer.data)
         return Response(serializer.data)
 
 from rest_framework.views import APIView
@@ -136,6 +151,7 @@ class cartView(APIView):
             cart_data = cart_serializer.validated_data
             user_g = cart_data.get('user')
             product_name_g = cart_data.get('product_name')
+            # image_g = str(cart_data.get('image'))[6:]
             image_g = cart_data.get('image')
             quantity_g = cart_data.get('quantity')
             price_g = cart_data.get('price')
@@ -167,15 +183,19 @@ class userOrderView(APIView):
 
     def get_nearest_seller(self, user_lat, user_lon, product_name, price):
         seller_phones = products.objects.filter(product_name=product_name, price=price).values_list('seller', flat=True)
-        sellers = sellers.objects.filter(phone__in=seller_phones)
+        sellersf = sellers.objects.filter(phone__in=seller_phones)
         min_distance = float('inf')
         nearest_seller = None
-        for seller in sellers:
+        for seller in sellersf:
             distance = self.calculate_distance(user_lat, user_lon, seller.lat, seller.lon)
             if distance < min_distance:
                 min_distance = distance
                 nearest_seller = seller
         return nearest_seller
+
+    def get_seller_product_image(self, seller_phone, product_name):
+        return products.objects.filter(seller=seller_phone, product_name=product_name).first().image
+    
 
     def post(self, request, format=None):
         print(request.data)
@@ -193,20 +213,21 @@ class userOrderView(APIView):
         # Save products to the database
         for product_data in products:
             # select the seller who has the product and is nearest to the user
+            seller_p = self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName'), product_data.get('price')).phone
             product = orders(
                 user=user_phone_number,
-                seller=self.get_nearest_seller(user_details.get('lat'), user_details.get('lon'), product_data.get('productName'), product_data.get('price').get('phone'),
+                seller= seller_p,
                 quantity=product_data.get('quantity'),
                 price=product_data.get('price'),
                 productName=product_data.get('productName'),
-                image=product_data.get('image')
+                image=self.get_seller_product_image(seller_p, product_data.get('productName')),
+                status=product_data.get('status')
             )
             product.save()
             # remove a product from the cart
             cart_product = carts.objects.filter(user=user_phone_number, product_name=product_data.get('productName'), price=product_data.get('price')).first()
             if cart_product:
                 cart_product.delete()
-
 
         return Response({'message': 'Products and user details saved successfully'}, status=status.HTTP_200_OK)
         # return Response({'message': 'Data received successfully'}, status=status.HTTP_200_OK)
@@ -223,3 +244,21 @@ class userOrderView(APIView):
 
 
 
+class OrdersBySeller(APIView):
+    def get(self, request, seller_id):
+        # Retrieve orders for a specific seller
+        seller_orders = orders.objects.filter(seller=seller_id)
+        
+        # Serialize the orders
+        serializer = orderserializer(seller_orders, many=True)
+        return Response(serializer.data)
+    
+
+class myorders(APIView):
+    def get(self, request, seller_id):
+        # Retrieve orders for a specific seller
+        myorders = orders.objects.filter(user=seller_id)
+        print("asfd")
+        # Serialize the orders
+        serializer = orderserializer(myorders, many=True)
+        return Response(serializer.data)

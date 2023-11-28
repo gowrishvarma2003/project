@@ -16,6 +16,7 @@ urlpatterns = [
     path('cart_data/<int:user_id>/', views.cart_data.as_view(), name='cart_data'),
     path('order/', views.userOrderView.as_view(), name='order'),
     path('seller_orders/<int:seller_id>/', views.OrdersBySeller.as_view(), name='seller_orders'),
+    path('myorders/<int:seller_id>/', views.myorders.as_view(), name='seller_orders'),
 
 ]
 
