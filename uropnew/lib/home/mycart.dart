@@ -165,7 +165,7 @@ class _mycartState extends State<mycart> {
             MaterialPageRoute(builder: (context) => mycart()),
           );
         },
-        child: Text('Add products'),
+        child: Text('Place order'),
       ));
     }
 

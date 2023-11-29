@@ -31,4 +31,5 @@ urlpatterns = [
     path('order/',include('server.urls')),
     path('seller_orders/',include('server.urls')),
     path('myorders/',include('server.urls')),
+    path('getaddress/',include('server.urls')),
 ]

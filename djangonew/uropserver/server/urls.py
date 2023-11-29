@@ -17,6 +17,7 @@ urlpatterns = [
     path('order/', views.userOrderView.as_view(), name='order'),
     path('seller_orders/<int:seller_id>/', views.OrdersBySeller.as_view(), name='seller_orders'),
     path('myorders/<int:seller_id>/', views.myorders.as_view(), name='seller_orders'),
+    path('getaddress/<int:seller_id>/', views.getaddress.as_view(), name='get_address'),
 
 ]
 

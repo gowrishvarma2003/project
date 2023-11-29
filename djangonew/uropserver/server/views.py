@@ -262,3 +262,14 @@ class myorders(APIView):
         # Serialize the orders
         serializer = orderserializer(myorders, many=True)
         return Response(serializer.data)
+    
+
+
+class getaddress(APIView):
+    def get(self, request, seller_id):
+        # Retrieve orders for a specific seller
+        myorders = users.objects.filter(phone=seller_id)
+        print("asfd")
+        # Serialize the orders
+        serializer = userserializer(myorders, many=True)
+        return Response(serializer.data)
