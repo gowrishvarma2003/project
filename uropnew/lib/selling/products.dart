@@ -115,7 +115,7 @@ Widget quantety() {
           return null;
         },
         decoration: InputDecoration(
-          labelText: "quanteaty",
+          labelText: "Quantity",
           fillColor: Colors.black,
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black),

@@ -12,8 +12,6 @@ class seller extends StatefulWidget {
 
 class _sellerstate extends State<seller> {
 
-
-  
     late Position _currentPosition;
     String? latitude;
     String? longitude;

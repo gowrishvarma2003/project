@@ -95,7 +95,7 @@ class _verifystate extends State<verify> {
                   );
                 },
                 child: Text(
-                  "Add to cart",
+                  "Log in",
                   style: TextStyle(
                     backgroundColor: Colors.black,
                     color: Colors.white,

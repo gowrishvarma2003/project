@@ -11,7 +11,7 @@ import 'package:uropnew/selling/seller.dart';
 import 'package:uropnew/selling/seller_orders.dart';
 
 // define a global variable that can be used in all the files
-String ip = '10.1.171.172:8000';
+String ip = '10.1.87.77:8000';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: OrdersPage(),
+      home: verify(),
     );
   }
 }
